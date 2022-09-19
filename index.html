@@ -1,0 +1,594 @@
+
+<!doctype html>
+<!--suppress HtmlRequiredAltAttribute -->
+<html lang="en">
+  <head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-83X489CWTX"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-83X489CWTX');
+	</script>
+    <!-- <meta charset="utf-8"> -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
+
+    <title>Learning to Relight Portrait Images via a Virtual Light Stage and Synthetic-to-Real Adaptation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+    <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/jablonczay/code-box-copy/code-box-copy/css/code-box-copy.min.css" rel="stylesheet" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-785B72NGSP"></script>
+    <script>function toggleimage() {
+        if (document.getElementById("checkbox_text").checked && document.getElementById("checkbox_seg").checked && document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("teaser").src="images/teaser/g_out.jpg"
+        } else if (!document.getElementById("checkbox_text").checked && document.getElementById("checkbox_seg").checked && document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("teaser").src="images/teaser/f_out.jpg"
+        } else if (document.getElementById("checkbox_text").checked && document.getElementById("checkbox_seg").checked && !document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("teaser").src = "images/teaser/e_out.jpg"
+        } else if (document.getElementById("checkbox_text").checked && !document.getElementById("checkbox_seg").checked && document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("teaser").src = "images/teaser/d_out.jpg"
+        } else if (!document.getElementById("checkbox_text").checked && document.getElementById("checkbox_seg").checked && !document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("teaser").src = "images/teaser/c_out.jpg"
+        } else if (!document.getElementById("checkbox_text").checked && !document.getElementById("checkbox_seg").checked && document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("teaser").src = "images/teaser/b_out.jpg"
+        } else if (document.getElementById("checkbox_text").checked && !document.getElementById("checkbox_seg").checked && !document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("teaser").src = "images/teaser/a_out.jpg"
+        } else {
+            document.getElementById("teaser").src="images/teaser/out.jpg"
+        }
+
+        if (document.getElementById("checkbox_text").checked) {
+            document.getElementById("label_text").style.border="1px solid #000"
+            document.getElementById("label_text").filter="grayscale(100%)"
+        } else {
+            document.getElementById("label_text").style.border="1px solid #000"
+            document.getElementById("label_text").filter="grayscale(0%)"
+        }
+        if (document.getElementById("checkbox_sketch").checked) {
+            document.getElementById("label_sketch").style.border="1px solid #000"
+            document.getElementById("label_text").filter="grayscale(100%)"
+        } else {
+            document.getElementById("label_sketch").style.border="1px solid #000"
+            document.getElementById("label_text").filter="grayscale(0%)"
+        }
+        if (document.getElementById("checkbox_seg").checked) {
+            document.getElementById("label_seg").style.border="1px solid #000"
+        } else {
+            document.getElementById("label_seg").style.border="1px solid #000"
+        }
+
+    }
+
+    window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-785B72NGSP');
+    </script>
+
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            padding-bottom: 50px;
+        }
+        hr {
+            background: #80808083;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 20% 20% 20% 20% 20%;
+            padding: 2px;
+        }
+        .grid-container-large {
+            display: grid;
+            grid-template-columns: 29% 28% 28% 15%;
+            padding: 2px;
+        }
+        .grid-container-video {
+            display: grid;
+            grid-template-columns: 100%;
+            padding: 2px;
+        }
+        .grid-item {
+            padding: 2px;
+            font-size: 30px;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            display:flex;
+        }
+
+        /*input[type="checkbox"] {*/
+        /*    display: none;*/
+        /*}*/
+        img {
+            -webkit-filter: grayscale(0%);
+            filter: grayscale(0%);
+        }
+
+        label {
+          border: 1px solid #000;
+          padding: 0;
+          display: inline-block;
+          position: relative;
+          margin: 0;
+          cursor: pointer;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+        .embed-responsive-2by1 {
+            padding-bottom: 50%;
+        }
+        .embed-responsive-4by1 {
+            padding-bottom: 25%;
+        }
+        .embed-responsive-6by1 {
+            padding-bottom: 16.67%;
+        }
+        .embed-responsive-8by1 {
+            padding-bottom: 12.50%;
+        }
+        .embed-responsive-teaser {
+            padding-bottom: 29%;
+        }
+        .float-button {
+            position: fixed;
+            right: 1%;
+            z-index: 9999;
+        }
+        .vert {
+            transform-origin: 50% 50%;
+            transform: rotate(180deg);
+            writing-mode: vertical-rl;
+            margin: 0;
+        }
+        .caption {
+            font-size: 0.9rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /*.row {*/
+        /*    display: grid;*/
+        /*    grid-auto-flow: row;*/
+        /*    gap: 5%;*/
+        /*}*/
+
+        .carousel .carousel-indicators li {
+            width: 10px;
+            height: 10px;
+            border-radius: 100%;
+        }
+        .carousel .carousel-indicators { visibility: hidden; }
+        .carousel:hover .carousel-indicators { visibility: visible; }
+
+        .w-85 {
+            width: 85%!important;
+        }
+        /*#videoGallery {
+            margin-left: 50px;
+            margin-right: 50px;
+        }*/
+        .carousel-control-prev{
+            width: 7%;
+            filter: invert(100%);
+        }
+        .carousel-control-next{
+            width: 7%;
+            filter: invert(100%);
+        }
+
+    </style>
+  </head>
+
+  <body>
+    <main role="main">
+
+      <section class="jumbotron text-center" style="padding: 2%; padding-bottom: 1%; background-color: #e6e9ec;">
+        <div class="container">
+          <h3 class="jumbotron-heading">Learning to Relight Portrait Images via a Virtual Light Stage and Synthetic-to-Real Adaptation</h3>
+        </div>
+
+        <div class="container" style="max-width: 1024px;">
+            <div class="row">
+                <div class="col-md">
+                    <h6 class="text-center" style="margin: 0;"><a class="text-center" href="https://yuyingyeh.github.io/" target="_blank"><span style="color: #76b900;">Yu-Ying Yeh<sup>†‡</sup></span></a></h6>
+                </div>
+                <div class="col-md">
+                    <h6 class="text-center" style="margin: 0;"><a class="text-center" href="https://luminohope.org/" target="_blank"><span style="color: #76b900;">Koki Nagano<sup>†</sup></span></a></h6>
+                </div>
+                <div class="col-md">
+                    <h6 class="text-center" style="margin: 0;"><a class="text-center" href="https://www.samehkhamis.com/" target="_blank"><span style="color: #76b900;">Sameh Khamis<sup>†</sup></span></a></h6>
+                </div>
+                <div class="col-md">
+                    <h6 class="text-center" style="margin: 0;"><a class="text-center" href="https://jankautz.com/" target="_blank"><span style="color: #76b900;">Jan Kautz<sup>†</sup></span></a></h6>
+                </div>
+                <div class="col-md">
+                    <h6 class="text-center" style="margin: 0;"><a class="text-center" href="http://mingyuliu.net/" target="_blank"><span style="color: #76b900;">Ming-Yu Liu<sup>†</sup></span></a></h6>
+                </div>
+                <div class="col-md">
+                    <h6 class="text-center" style="margin: 0;"><a class="text-center" href="https://tcwang0509.github.io/" target="_blank"><span style="color: #76b900;">Ting-Chun Wang<sup>†</sup></span></a></h6>
+                </div>
+                
+            </div>
+            <div class="row" style="margin-top:0.5rem; margin-left: auto; margin-right: auto;">
+                <div class="col-md">
+                    <h6><sup>†</sup>NVIDIA Corporation</h6>
+                    <h6><sup>‡</sup>UC San Diego</h6>
+                </div>
+                
+            </div>
+            <!-- <div class="row" style="margin-top:0.5rem; margin-left: auto; margin-right: auto;">
+                <div class="col-md">
+                    <h5><b>ECCV 2022</b></h5>
+                </div>
+            </div> -->
+        </div>
+
+
+        <div class="buttons">
+            <a href="http://arxiv.org/abs/" target="_blank" class="btn btn-primary my-2">Paper (arxiv)</a>
+            <a href="https://youtu.be/uWSVpG0eKbU" target="_blank" class="btn btn-primary my-2">Video</a>
+            <a href="" target="_blank" class="btn btn-primary my-2">Demo</a>
+            <a href="https://drive.google.com/drive/folders/1lEW3No3U6P_KwKOimrytOEKL7N-jnbgz?usp=sharing" target="_blank" class="btn btn-primary my-2">Dataset</a>
+        </div>
+
+        <div class="container" style="max-width: 900px;">
+            <div class="row">
+                <div class="col-md">
+                        <h5>TL;DR: A relighting framework trained on paired synthetic data and adapted on unpaired real data.</h5>
+                </div>
+            </div>
+            <div class="column" style="margin: auto;width: 100%">
+                <img id="teaser_text" src="images/teaser.jpg" style="width: 100%;">
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    <p>
+                        Abstract: Given a portrait image of a person and an environment map of the target lighting, portrait relighting aims to re-illuminate the person in the image as if the person appeared in an environment with the target lighting. To achieve high-quality results, recent methods rely on deep learning. An effective approach is to supervise the training of deep neural networks with a high-fidelity dataset of desired input-output pairs, captured with a light stage. However, acquiring such data requires an expensive special capture rig and time-consuming efforts, limiting access to only a few resourceful laboratories. To address the limitation, we propose a new approach that can perform on par with the state-of-the-art (SOTA) relighting methods without requiring a light stage. In addition to achieving SOTA results, our approach offers several advantages over the prior methods, including controllable glares on glasses and more temporally-consistent results for relighting videos.
+                    </p>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="column" style="margin: auto;width: 23%">
+                    <label for="checkbox_text" id="label_text" style="width: 100%;"><img id="teaser_text" src="images/teaser/text.png" style="width: 100%;"></label>
+                    <input type="checkbox" id="checkbox_text" onchange="toggleimage()" checked="checked" /> Text
+                    <label for="checkbox_seg" id="label_seg" style="width: 100%;"><img class="image-grey" id="teaser_seg" src="images/teaser/seg.png" style="width: 100%;"></label>
+                    <input type="checkbox" id="checkbox_seg" onchange="toggleimage()" checked="checked" /> Segmentation
+                    <label for="checkbox_sketch" id="label_sketch" style="width: 100%;"><img id="teaser_sketch" src="images/teaser/sketch.png" style="width: 100%;"></label>
+                    <input type="checkbox" id="checkbox_sketch" onchange="toggleimage()" checked="checked" /> Sketch
+                </div>
+                <div class="column" style="margin: auto;width: 77%;">
+                    <img id="teaser" src="images/teaser/g_out.jpg" style="margin: 8px;width: 100%;">
+                </div>
+
+                </br>
+            </div>
+            <p class="caption text-center">Left: input modalities, right: the output image. Click each modality to choose whether it is used to synthesize the output image.</p> -->
+            <hr style="max-width: 100%;">
+        </div>
+
+      </section>
+    </main>
+
+<!--    &lt;!&ndash; TL;DR floating button &ndash;&gt;-->
+<!--    <div class="float-button">-->
+<!--        <p class="float-right">-->
+<!--            <a href="#Summary">TL;DR</a>-->
+<!--        </p>-->
+<!--    </div>-->
+
+    <!-- Summary video -->
+    <div class="container" style="max-width: 768px;">
+        <div id="videos" class="carousel slide" data-interval="false" data-ride="carousel">
+            <ol class="carousel-indicators hidden">
+                <li data-target="#videos" data-slide-to="0" class="active"></li>
+                <li data-target="#videos" data-slide-to="1"></li>
+                <li data-target="#videos" data-slide-to="2"></li>
+            </ol>
+
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="grid-container-video" style="width: 90%; margin-left: auto; margin-right: auto">
+                        <div class="grid-item"><div><h6>Video</h6></div></div>
+                        <div class="embed-responsive embed-responsive-16by9" style="margin: 0;">
+                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/uWSVpG0eKbU" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+
+            <a class="carousel-control-prev" href="#videos" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#videos" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <!-- Generator Architecture -->
+        <div class="row">
+            <div class="col-md-12">
+                <hr style="max-width: 768px;">
+                <h5 class="text-center">Dataset</h5>
+                <p>
+                    We present a physically-rendered synthetic dataset tailored for portrait relighting. The dataset consists of 300k samples, where each sample is rendered under two different HDR illuminations. Besides the RGB images, we also render a suite of other attributes, such as albedo and normal maps.
+                </p>
+                <div class="row justify-content-center">
+                    <img src="images/attributes.jpg" style="width: 700px;margin-bottom: 0px;">
+                </div>
+                <p class="caption text-center">An example of the rendered images and AOVs in our dataset.</p>
+                <br>
+
+                <p>
+                    We vary the dataset using a wide range of identities, and each rendering is paired with a random hairstyle, clothing, and camera pose.
+                </p>
+                <div class="row justify-content-center">
+                    <img src="images/render_variety.jpg" style="width: 700px;margin-bottom: 0px;">
+                </div>
+                <p class="caption text-center">Variations of our dataset.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Outputs. -->
+    <hr style="max-width: 768px;">
+    <div class="container" style="max-width: 768px;">
+        <div class="text-center">
+            <h5>Results</h5>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p> We first compare with state-of-the-art portrait relighting methods on close-up face crops.</p>
+            </div>
+        </div>
+        <div id="seg2img" class="carousel slide" data-interval="false" data-ride="carousel">
+            <ol class="carousel-indicators hidden">
+                <li data-target="#seg2img" data-slide-to="0" class="active"></li>
+                <li data-target="#seg2img" data-slide-to="1"></li>
+                <li data-target="#seg2img" data-slide-to="2"></li>
+            </ol>
+            <div class="grid-container" style="width: 90%; margin-left: auto; margin-right: auto">
+                <div class="grid-item"><div><h6>Input </h6></div></div>
+                <div class="grid-item"><h6><a href='https://sireer.github.io/projects/FLM_project/' target='_blank'>SIPR-W</a></h6></div>
+                <div class="grid-item"><h6><a href='https://zhang-dragon.com/projects/nvpr/nvpr.html' target='_blank'>NVPR</a></h6></div>
+                <div class="grid-item"><h6><a href='https://augmentedperception.github.io/total_relighting/' target='_blank'>TR</a></h6></div>
+                <div class="grid-item"><h6>Ours</h6></div>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="grid-item" style="width: 90%; margin-left: auto; margin-right: auto"><img src="images/comparison/result1.jpg" style="width: 100%;"></div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-item" style="width: 90%; margin-left: auto; margin-right: auto"><img src="images/comparison/result2.jpg" style="width: 100%;"></div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-item" style="width: 90%; margin-left: auto; margin-right: auto"><img src="images/comparison/result3.jpg" style="width: 100%;"></div>
+                </div>
+            </div>
+            <p class="caption text-center" style="margin-bottom: 20px">Comparisons with state-of-the-art methods on close crops of FFHQ.</p>
+            <a class="carousel-control-prev" href="#seg2img" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#seg2img" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <div class="col-md-12">
+                <p> Next, we show high-res comparisons with TR on larger face crops.</p>
+            </div>
+        <div id="text2img" class="carousel slide" data-interval="false" data-ride="carousel">
+            <ol class="carousel-indicators hidden">
+                <li data-target="#text2img" data-slide-to="0" class="active"></li>
+                <li data-target="#text2img" data-slide-to="1"></li>
+                <li data-target="#text2img" data-slide-to="2"></li>
+            </ol>
+
+            <div class="grid-container-large" style="width: 90%; margin-left: auto; margin-right: auto">
+                <div class="grid-item"><div><h6>Input</h6></div></div>
+                <div class="grid-item"><h6><a href='https://augmentedperception.github.io/total_relighting/' target='_blank'>TR</a></h6></div>
+                <div class="grid-item"><h6>Ours</h6></div>
+                <div class="grid-item"><h6>Light</h6></div>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="grid-item" style="width: 90%; margin-left: auto; margin-right: auto"><img src="images/comparison/highres/result1.jpg" style="width: 100%;"></div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-item" style="width: 90%; margin-left: auto; margin-right: auto"><img src="images/comparison/highres/result2.jpg" style="width: 100%;"></div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-item" style="width: 90%; margin-left: auto; margin-right: auto"><img src="images/comparison/highres/result3.jpg" style="width: 100%;"></div>
+                </div>
+            </div>
+            <p class="caption text-center">More comparisons with Total Relighting on large crops of FFHQ.</p>
+            <a class="carousel-control-prev" href="#text2img" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#text2img" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+<!--        <hr style="max-width: 768px;">-->
+<!--        <div class="text-center">-->
+<!--            <h5>Diverse output (Landscape)</h5>-->
+<!--        </div>-->
+
+        <hr style="max-width: 768px;">
+        <div class="row">
+            <div class="col-md-12">
+                <p> Our network also has the ability to add glares on eyeglasses. We show side-by-side comparisons for without and with adding glares by our method.</p>
+            </div>
+        </div>
+        <div id="multimodal" class="carousel slide" data-interval="false" data-ride="carousel">
+            <ol class="carousel-indicators hidden">
+                <li data-target="#multimodal" data-slide-to="0" class="active"></li>
+                <li data-target="#multimodal" data-slide-to="1"></li>
+                <li data-target="#multimodal" data-slide-to="2"></li>
+                <li data-target="#multimodal" data-slide-to="3"></li>
+            </ol>
+            <div class="grid-container" style="width: 90%; margin-left: auto; margin-right: auto; grid-template-columns: 33% 33% 33%;">
+                <div class="grid-item"><div><h6>Input<br></h6></div></div>
+                <div class="grid-item"><h6>Relit w/o glares</h6></div>
+                <div class="grid-item"><h6>Relit w/ glares</h6></div>
+                <div class="grid-item"><h6></h6></div>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="grid-container" style="width: 90%; margin-left: auto; margin-right: auto; grid-template-columns: 33% 66%;">
+                        <div class="grid-item"><img src="images/glare/input1.jpg" style="width: 100%;"></div>
+                        <div class="grid-item"><img src="images/glare/output1.gif" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-container" style="width: 90%; margin-left: auto; margin-right: auto; grid-template-columns: 33% 66%;">
+                        <div class="grid-item"><img src="images/glare/input2.jpg" style="width: 100%;"></div>
+                        <div class="grid-item"><img src="images/glare/output2.gif" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-container" style="width: 90%; margin-left: auto; margin-right: auto; grid-template-columns: 33% 66%;">
+                        <div class="grid-item"><img src="images/glare/input3.jpg" style="width: 100%;"></div>
+                        <div class="grid-item"><img src="images/glare/output3.gif" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-container" style="width: 90%; margin-left: auto; margin-right: auto; grid-template-columns: 33% 66%;">
+                        <div class="grid-item"><img src="images/glare/input4.jpg" style="width: 100%;"></div>
+                        <div class="grid-item"><img src="images/glare/output4.gif" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#multimodal" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#multimodal" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <hr style="max-width: 768px;">
+    </div>
+
+    <div class="container" style="max-width: 768px;">
+        <div class="row">
+            <div class="col-md-12">
+                <p> Finally, we also achieve more temporally-stable video relighting results using our temporal smoothing mechanism.</p>
+            </div>
+        </div>
+        <div id="gaugan360" class="carousel slide" data-interval="false" data-ride="carousel">
+            <ol class="carousel-indicators hidden">
+                <li data-target="#gaugan360" data-slide-to="0" class="active"></li>
+                <li data-target="#gaugan360" data-slide-to="1"></li>
+                <li data-target="#gaugan360" data-slide-to="2"></li>
+            </ol>
+            <div class="grid-container" style="width: 90%; margin-left: auto; margin-right: auto; grid-template-columns: 33% 33% 33%;">
+                <div class="grid-item"><div><h6>Input </h6></div></div>
+                <div class="grid-item"><h6><a href='https://zhang-dragon.com/projects/nvpr/nvpr.html' target='_blank'>NVPR</a></h6></div>
+                <div class="grid-item"><h6>Ours</h6></div>
+            </div>
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="grid-container-video" style="width: 90%; margin-left: auto; margin-right: auto">
+                        <div class="grid-item"><img src="images/video/1.gif" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-container-video" style="width: 90%; margin-left: auto; margin-right: auto">
+                        <div class="grid-item"><img src="images/video/2.gif" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="grid-container-video" style="width: 90%; margin-left: auto; margin-right: auto">
+                        <div class="grid-item"><img src="images/video/3.gif" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+            <a class="carousel-control-prev" href="#gaugan360" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#gaugan360" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+    <!-- Citation. -->
+    <hr style="max-width: 768px;">
+    <div class="container" style="max-width: 768px;">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Citation</h2>
+            </div>
+        </div>
+        <div class="code-box-copy"  style="font-size: 0.9rem !important; max-width: 768px; margin: 0 auto;">
+            <button class="code-box-copy__btn" data-clipboard-target="#citation" title="Copy" style="opacity: 1;"></button>
+<pre><code class="language-bib" style="font-size: 0.9rem;" id="citation">@article{yeh2022learning,
+    title={Learning to Relight Portrait Images via a Virtual Light Stage and Synthetic-to-Real Adaptation},
+    author={Yu-Ying Yeh and Koki Nagano and Sameh Khamis and Jan Kautz and Ming-Yu Liu and Ting-Chun Wang},
+    journal={ACM Transactions on Graphics (TOG)},
+    year={2022}
+}</code></pre>
+        </div>
+    </div>
+
+    <footer class="text-muted">
+        <div class="container">
+            <p class="float-right">
+                <a href="#">Back to top</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/gh/jablonczay/code-box-copy/clipboard/clipboard.min.js,gh/jablonczay/code-box-copy/code-box-copy/js/code-box-copy.min.js"></script>
+    <script src="https://saswatpadhi.github.io/prismjs-bibtex/prism-bibtex.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+    <script>
+        (function($) {
+            $('.code-box-copy').codeBoxCopy();
+        })(jQuery);
+    </script>
+  </body>
+</html>
